@@ -7,7 +7,7 @@ import path from 'path';
 const SNAPSHOT_DIR = path.resolve('snapshots');
 const TODAY = new Date().toISOString().slice(0, 10); // e.g. "2025-08-19"
 const FILE_PATH = path.join(SNAPSHOT_DIR, `${TODAY}.json`);
-const MAX_ENTRIES = 96; // every 15 minutes
+const MAX_ENTRIES = 288; // every 5 minutes
 
 // === Ensure folder exists ===
 if (!fs.existsSync(SNAPSHOT_DIR)) {
