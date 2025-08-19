@@ -15,6 +15,7 @@
   "bugs": {
     "url": "https://github.com/aroan-v/nylon-biggest-breakout-star-cache/issues"
   },
+  "type": "module",
   "homepage": "https://github.com/aroan-v/nylon-biggest-breakout-star-cache#readme",
   "description": "",
   "dependencies": {

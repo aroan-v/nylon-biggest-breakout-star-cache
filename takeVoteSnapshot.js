@@ -58,7 +58,11 @@ function addSnapshot(votes) {
   saveData(data);
 }
 
-// === Scraper function ===
+// === Helper sleep ===
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function scrapeVotes() {
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -76,36 +80,54 @@ async function scrapeVotes() {
     </html>
   `);
 
+  // Wait for global poll function and trigger it
   await page.evaluate(() => {
-    if (typeof PD_vote15909793 === 'function') {
-      PD_vote15909793(1);
-    }
+    return new Promise((resolve) => {
+      const tryTrigger = () => {
+        if (typeof PD_vote15909793 === 'function') {
+          PD_vote15909793(1); // Request results
+          resolve();
+        } else {
+          setTimeout(tryTrigger, 300);
+        }
+      };
+      tryTrigger();
+    });
   });
 
-  await page.waitForTimeout(2000);
+  console.log('[Scraper] ⏳ Waiting for vote results...');
+  await page.waitForSelector('.pds-feedback-group', {
+    timeout: 15000,
+  });
+  await sleep(1000); // Ensure full render
 
+  // ✅ Extract vote data
   const votes = await page.evaluate(() => {
-    const groups = document.querySelectorAll('.pds-feedback-group');
     const results = {};
-    groups.forEach((group) => {
-      const nameSpan = group.querySelector('[title]');
-      const rawVote = group.querySelector(
-        '.pds-feedback-votes'
-      )?.textContent;
-      const name = nameSpan?.getAttribute('title')?.trim();
-      const voteMatch = rawVote?.match(/([\\d,]+)/);
-      const count = voteMatch
-        ? parseInt(voteMatch[1].replace(/,/g, ''))
+    const items = document.querySelectorAll('.pds-feedback-group');
+
+    items.forEach((item) => {
+      const name = item
+        .querySelector('[title]')
+        ?.getAttribute('title')
+        ?.trim();
+      const raw =
+        item.querySelector('.pds-feedback-votes')?.innerText || '';
+      const match = raw.match(/[\d,]+/);
+      const count = match
+        ? parseInt(match[0].replace(/,/g, ''), 10)
         : null;
 
       if (name && count !== null && !isNaN(count)) {
         results[name] = count;
       }
     });
+
     return results;
   });
 
   await browser.close();
+
   return votes;
 }
 
