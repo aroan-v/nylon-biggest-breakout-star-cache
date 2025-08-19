@@ -1,5 +1,17 @@
-# Node.js dependencies
-/node_modules
+# Node modules (don't commit all packages)
+node_modules/
+
+# Environment variables (credentials, API keys, Firebase config)
+.env
+
+# Puppeteer Chromium downloads (if using default install)
+.puppeteer/
+
+# macOS metadata files
+.DS_Store
+
+# VSCode settings (optional)
+.vscode/
 
 # Logs
 npm-debug.log*
@@ -7,20 +19,14 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Environment variables
-.env
-.env.local
-.env.*.local
+# Firebase local emulators (if used)
+firebase-debug.log
+firestore-debug.log
+.firebaserc
 
-# Build output
-/dist
-/build
-/.next
-/out
+# Compiled output (if you decide to bundle anything)
+dist/
+build/
 
-# System files
-.DS_Store
-Thumbs.db
 
-# Optional caches
-.cache
+serviceAccountKey.json
