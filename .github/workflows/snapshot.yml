@@ -15,10 +15,12 @@ jobs:
         with:
           node-version: 20 # ✅ you’re using Node.js v20 in errors/logs
 
-      - name: 💾 Cache node modules
+      - name: 💾 Cache node modules + Puppeteer
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: |
+            node_modules
+            ~/.cache/puppeteer   # <-- this is where Puppeteer stores the Chromium binary
           key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-modules-
