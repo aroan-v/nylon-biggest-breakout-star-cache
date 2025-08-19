@@ -1,28 +1,52 @@
-name: Manual Test Run
+name: Update daily snapshots
 
 on:
-  workflow_dispatch: # Only runs when manually triggered
+  workflow_dispatch: # 🚀 Manual trigger only
 
 jobs:
-  test:
+  update-snapshot:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout your repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: 🧾 Checkout repo
+        uses: actions/checkout@v3
 
-      # Step 2: Setup Node.js with caching for npm
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20' # You can change this to your project's version
-          cache: 'npm'
+          node-version: 20 # ✅ you’re using Node.js v20 in errors/logs
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - name: 💾 Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-modules-
 
-      # Step 4: Run your test script
-      - name: Run script
-        run: node takeVoteSnapshot.js
+      - name: 📦 Install dependencies
+        run: |
+          echo "🔍 Installing npm packages..."
+          npm install
+
+      - name: ▶️ Run snapshot script
+        run: |
+          echo "🚀 Running takeVoteSnapshot.js..."
+          node takeVoteSnapshot.js
+          echo "✅ Snapshot taken."
+
+      - name: 🚚 Push changes to repo
+        run: |
+          echo "🔧 Configuring Git..."
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          echo "📂 Adding modified files..."
+          git add snapshots/*.json
+
+          echo "📝 Committing changes..."
+          git commit -m "📊 Update snapshot for $(date +'%Y-%m-%d')" || echo "⚠️ Nothing to commit"
+
+          echo "🔐 Pushing to repo..."
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/nylon-biggest-breakout-star-cache.git
+
+          echo "✅ Push completed."
