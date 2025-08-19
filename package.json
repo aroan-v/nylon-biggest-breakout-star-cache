@@ -1,0 +1,24 @@
+{
+  "name": "nylon-biggest-breakout-star-cache",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aroan-v/nylon-biggest-breakout-star-cache.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aroan-v/nylon-biggest-breakout-star-cache/issues"
+  },
+  "homepage": "https://github.com/aroan-v/nylon-biggest-breakout-star-cache#readme",
+  "description": "",
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^24.16.2"
+  }
+}

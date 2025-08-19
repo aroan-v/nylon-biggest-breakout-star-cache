@@ -1,0 +1,28 @@
+name: Manual Test Run
+
+on:
+  workflow_dispatch: # Only runs when manually triggered
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout your repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js with caching for npm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # You can change this to your project's version
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run your test script
+      - name: Run script
+        run: node takeVoteSnapshot.js
