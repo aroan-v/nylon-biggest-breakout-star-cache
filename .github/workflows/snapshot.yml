@@ -13,17 +13,15 @@ jobs:
       - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20 # ✅ you’re using Node.js v20 in errors/logs
+          node-version: 20 # ✅ Node.js v20 matches your project
 
-      - name: 💾 Cache node modules + Puppeteer
+      - name: 💾 Cache npm modules
         uses: actions/cache@v3
         with:
-          path: |
-            node_modules
-            ~/.cache/puppeteer   # <-- this is where Puppeteer stores the Chromium binary
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm # safer than caching Puppeteer binaries
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-modules-
+            ${{ runner.os }}-node-
 
       - name: 📦 Install dependencies
         run: |
