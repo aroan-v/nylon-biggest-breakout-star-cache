@@ -10,11 +10,6 @@ jobs:
       - name: 🧾 Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⚙️ Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20 # ✅ Node.js v20 matches your project
-
       - name: ▶️ Run snapshot script
         run: |
           echo "🚀 Running takeVoteSnapshotV2.js..."
