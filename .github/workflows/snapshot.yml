@@ -1,4 +1,4 @@
-name: Update daily snapshots
+name: Update snapshots
 
 on:
   workflow_dispatch: # 🚀 Manual trigger only
@@ -18,7 +18,7 @@ jobs:
       - name: 💾 Cache npm modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm # safer than caching Puppeteer binaries
+          path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -30,8 +30,8 @@ jobs:
 
       - name: ▶️ Run snapshot script
         run: |
-          echo "🚀 Running takeVoteSnapshot.js..."
-          node takeVoteSnapshot.js
+          echo "🚀 Running takeVoteSnapshotV2.js..."
+          node takeVoteSnapshotV2.js
           echo "✅ Snapshot taken."
 
       - name: 🚚 Push changes to repo

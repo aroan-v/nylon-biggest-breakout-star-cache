@@ -5,7 +5,7 @@ import path from 'path';
 // === Constants ===
 const SNAPSHOT_DIR = path.resolve('snapshots');
 const TODAY = new Date().toISOString().slice(0, 10); // e.g. "2025-08-19"
-const FILE_PATH = path.join(SNAPSHOT_DIR, `TEST_${TODAY}.json`);
+const FILE_PATH = path.join(SNAPSHOT_DIR, `${TODAY}.json`);
 const MAX_ENTRIES = 288; // every 5 minutes
 
 // === Ensure folder exists ===
@@ -69,20 +69,12 @@ async function fetchVotes() {
     const nameVotePattern =
       /title="([^"]+)"[\s\S]*?\(([\d,.]+) votes\)/g;
 
-    // Regex pattern for total votes
-    const totalVotesPattern = /Total Votes: <span>([\d,.]+)<\/span>/;
-
     const results = {};
 
     // Extract individual votes
     for (const match of text.matchAll(nameVotePattern)) {
       results[match[1]] = Number(match[2].replace(/,/g, ''));
     }
-
-    // Extract total votes
-    const totalMatch = text.match(totalVotesPattern);
-    if (totalMatch)
-      results.totalVotes = Number(totalMatch[1].replace(/,/g, ''));
 
     return results;
   } catch (err) {

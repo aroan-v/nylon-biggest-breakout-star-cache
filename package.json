@@ -18,8 +18,5 @@
   "type": "module",
   "homepage": "https://github.com/aroan-v/nylon-biggest-breakout-star-cache#readme",
   "description": "",
-  "dependencies": {
-    "node-fetch": "^3.3.2",
-    "puppeteer": "^24.16.2"
-  }
+  "dependencies": {}
 }
