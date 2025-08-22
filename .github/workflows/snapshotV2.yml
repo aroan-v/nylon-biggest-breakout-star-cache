@@ -1,0 +1,52 @@
+name: Update snapshots
+
+on:
+  workflow_dispatch: # 🚀 Manual trigger only
+
+jobs:
+  update-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🧾 Checkout repo
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20 # ✅ Node.js v20 matches your project
+
+      - name: 💾 Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: 📦 Install dependencies
+        run: |
+          echo "🔍 Installing npm packages..."
+          npm install
+
+      - name: ▶️ Run snapshot script
+        run: |
+          echo "🚀 Running takeVoteSnapshotV2.js..."
+          node takeVoteSnapshotV2.js
+          echo "✅ Snapshot taken."
+
+      - name: 🚚 Push changes to repo
+        run: |
+          echo "🔧 Configuring Git..."
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          echo "📂 Adding modified files..."
+          git add snapshots/*.json
+
+          echo "📝 Committing changes..."
+          git commit -m "📊 Update snapshot for $(date +'%Y-%m-%d')" || echo "⚠️ Nothing to commit"
+
+          echo "🔐 Pushing to repo..."
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/nylon-biggest-breakout-star-cache.git
+
+          echo "✅ Push completed."
