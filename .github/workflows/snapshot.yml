@@ -12,22 +12,39 @@ jobs:
 
       - name: ▶️ Run snapshot script
         run: |
-          echo "🚀 Running takeVoteSnapshotV2.js..."
+          echo "::group::🚀 Running snapshot script"
+          pwd
+          ls -la
+          echo "Running takeVoteSnapshotV2.js..."
           node takeVoteSnapshotV2.js
           echo "✅ Snapshot taken."
+          echo "::endgroup::"
+
+      - name: 🔍 Debug Git status before commit
+        run: |
+          echo "::group::🔍 Git status"
+          pwd
+          ls -la snapshots || echo "⚠️ snapshots directory missing!"
+          git status
+          git diff --stat
+          echo "::endgroup::"
 
       - name: 🚚 Push changes to repo
         run: |
+          echo "::group::🚚 Git commit & push"
           echo "🔧 Configuring Git..."
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
           echo "📂 Adding modified files..."
-          if git diff --quiet snapshots/*.json; then
+          git add -A
+          git status
+
+          if git diff --cached --quiet; then
             echo "⚠️ No changes to commit"
           else
-            git add snapshots/*.json
-            git commit -m "📊 Update snapshot for $(date +'%Y-%m-%d')"
+            git commit -m "📊 Update snapshot for $(date +'%Y-%m-%d %H:%M:%S')"
             git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/aroan-v/nylon-biggest-breakout-star-cache.git
             echo "✅ Push completed."
           fi
+          echo "::endgroup::"

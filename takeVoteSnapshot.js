@@ -18,15 +18,19 @@ if (!fs.existsSync(SNAPSHOT_DIR)) {
 function loadData() {
   try {
     const raw = fs.readFileSync(FILE_PATH, 'utf-8');
+    console.log(`[Loader] Existing snapshot found (${FILE_PATH}), length: ${raw.length}`);
     return JSON.parse(raw);
   } catch {
+    console.log(`[Loader] No existing snapshot for today, creating new one.`);
     return { times: [], voteIncrements: {}, baselineVotes: null };
   }
 }
 
 // === Write JSON to disk ===
+
 function saveData(data) {
   fs.writeFileSync(FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  console.log(`[Saver] Data written to ${FILE_PATH}. Entries so far: ${data.times.length}`);
 }
 
 // === Add new snapshot entry ===
@@ -35,10 +39,14 @@ function addSnapshot(votes) {
   const timestamp = new Date().toISOString();
 
   if (!data.baselineVotes) {
+    console.log("[Snapshot] Setting baseline votes.");
     data.baselineVotes = votes;
   }
 
   data.times.push(timestamp);
+
+  console.log(`[Snapshot] Adding snapshot at ${timestamp}`);
+  console.log(`[Snapshot] Votes scraped:`, votes);
 
   for (const [name, count] of Object.entries(votes)) {
     if (!data.voteIncrements[name]) {
@@ -49,6 +57,7 @@ function addSnapshot(votes) {
 
   // Keep at most MAX_ENTRIES
   if (data.times.length > MAX_ENTRIES) {
+    console.log(`[Snapshot] Trimming old entries (keeping ${MAX_ENTRIES})`);
     data.times.shift();
     for (const arr of Object.values(data.voteIncrements)) {
       arr.shift();
