@@ -1,0 +1,33 @@
+{
+  "times": [
+    "2025-08-31T00:00:23.324Z"
+  ],
+  "voteIncrements": {
+    "FYANG SMITH": [
+      4592117
+    ],
+    "WILL ASHLEY": [
+      3839904
+    ],
+    "ASHTINE OLVIGA": [
+      49734
+    ],
+    "ESNYR": [
+      14824
+    ],
+    "EMILIO DAEZ": [
+      10820
+    ],
+    "CUP OF JOE": [
+      9856
+    ]
+  },
+  "baselineVotes": {
+    "FYANG SMITH": 4592117,
+    "WILL ASHLEY": 3839904,
+    "ASHTINE OLVIGA": 49734,
+    "ESNYR": 14824,
+    "EMILIO DAEZ": 10820,
+    "CUP OF JOE": 9856
+  }
+}
